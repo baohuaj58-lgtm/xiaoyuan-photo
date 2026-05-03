@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>摄影大师小袁</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;700&display=swap');
+
+  :root {
+    --bg: #0d0d0d;
+    --surface: #1a1a1a;
+    --gold: #c8a45c;
+    --gold-bright: #e8c97a;
+    --text: #ddd;
+    --text-dim: #888;
+    --accent: #d4783b;
+    --danger: #c0392b;
+    --radius: 12px;
+    --transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.7;
+  }
+
+  /* ── 粒子背景 ── */
+  #particles {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  }
+
+  /* ── 导航 ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(10,10,10,0.75);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 0 clamp(16px, 4vw, 60px);
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  nav .logo { font-weight: 900; font-size: 1.25rem; color: var(--gold); letter-spacing: 2px; }
+  nav .links { display: flex; gap: 32px; }
+  nav .links a { color: var(--text-dim); text-decoration: none; font-size: 0.9rem; transition: var(--transition); }
+  nav .links a:hover { color: var(--gold); }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    flex-direction: column; text-align: center; padding: 100px 20px 60px;
+  }
+  .hero .aperture {
+    width: 180px; height: 180px; border-radius: 50%;
+    border: 3px solid var(--gold);
+    position: relative; margin-bottom: 40px;
+    animation: aperturePulse 3s ease-in-out infinite;
+    box-shadow: 0 0 80px rgba(200,164,92,0.2), 0 0 160px rgba(200,164,92,0.08);
+  }
+  .hero .aperture::before {
+    content: ''; position: absolute; inset: 20%;
+    border-radius: 50%; border: 1px solid rgba(200,164,92,0.4);
+  }
+  .hero .aperture::after {
+    content: ''; position: absolute; inset: -10px;
+    border-radius: 50%; border: 1px dashed rgba(200,164,92,0.15);
+    animation: spin 20s linear infinite;
+  }
+  .hero .aperture .blade {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 120px; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transform-origin: left center;
+  }
+  .hero .aperture .blade:nth-child(1) { transform: translate(-50%,-50%) rotate(0deg); }
+  .hero .aperture .blade:nth-child(2) { transform: translate(-50%,-50%) rotate(45deg); }
+  .hero .aperture .blade:nth-child(3) { transform: translate(-50%,-50%) rotate(90deg); }
+  .hero .aperture .blade:nth-child(4) { transform: translate(-50%,-50%) rotate(135deg); }
+  .hero .aperture .blade:nth-child(5) { transform: translate(-50%,-50%) rotate(180deg); }
+  .hero .aperture .blade:nth-child(6) { transform: translate(-50%,-50%) rotate(225deg); }
+  .hero .aperture .blade:nth-child(7) { transform: translate(-50%,-50%) rotate(270deg); }
+  .hero .aperture .blade:nth-child(8) { transform: translate(-50%,-50%) rotate(315deg); }
+
+  @keyframes aperturePulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .hero h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    letter-spacing: 4px;
+  }
+  .hero .subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: var(--text-dim);
+    max-width: 600px;
+    margin-bottom: 36px;
+    letter-spacing: 2px;
+  }
+  .hero .cta {
+    display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+  }
+  .btn {
+    padding: 14px 32px; border-radius: 50px;
+    font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: var(--transition); border: none;
+    font-family: inherit; letter-spacing: 1px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold), var(--accent));
+    color: #111; box-shadow: 0 4px 24px rgba(200,164,92,0.3);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(200,164,92,0.45);
+  }
+  .btn-ghost {
+    background: transparent; border: 1px solid rgba(200,164,92,0.4);
+    color: var(--gold);
+  }
+  .btn-ghost:hover { background: rgba(200,164,92,0.08); }
+
+  /* ── 章节通用 ── */
+  section { position: relative; z-index: 1; padding: 80px clamp(16px,5vw,80px); max-width: 1100px; margin: 0 auto; }
+  .section-title {
+    text-align: center; margin-bottom: 56px;
+  }
+  .section-title h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    color: var(--text); margin-bottom: 8px;
+    letter-spacing: 2px;
+  }
+  .section-title p { color: var(--text-dim); font-size: 0.95rem; }
+
+  /* ── 曝光三角 ── */
+  .triangle-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    transition: var(--transition);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .card:hover {
+    border-color: rgba(200,164,92,0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+  .card .icon {
+    font-size: 2.2rem; margin-bottom: 16px; display: block;
+  }
+  .card h3 { color: var(--gold); font-size: 1.15rem; margin-bottom: 10px; letter-spacing: 1px; }
+  .card p { color: var(--text-dim); font-size: 0.9rem; line-height: 1.8; }
+  .card .detail {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.5s ease, margin 0.5s ease;
+    margin-top: 0;
+  }
+  .card.expanded .detail {
+    max-height: 200px; margin-top: 12px;
+  }
+  .card .detail-inner {
+    background: rgba(200,164,92,0.05);
+    border-radius: 8px; padding: 16px;
+    font-size: 0.85rem; color: #bbb;
+    border-left: 2px solid var(--gold);
+  }
+  .card::after {
+    content: '点击展开 ▼';
+    position: absolute; bottom: 8px; right: 16px;
+    font-size: 0.7rem; color: rgba(200,164,92,0.4);
+    transition: var(--transition);
+  }
+  .card.expanded::after { content: '点击收起 ▲'; }
+
+  /* ── 构图法则 ── */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+    gap: 20px;
+  }
+  .rule-item {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: var(--radius);
+    padding: 28px 22px;
+    text-align: center;
+    transition: var(--transition);
+  }
+  .rule-item:hover {
+    border-color: rgba(200,164,92,0.25);
+    transform: translateY(-3px);
+  }
+  .rule-item .rule-icon {
+    font-size: 2.5rem; margin-bottom: 12px; display: block;
+  }
+  .rule-item h4 { color: var(--gold); font-size: 1rem; margin-bottom: 8px; }
+  .rule-item p { color: var(--text-dim); font-size: 0.82rem; }
+
+  /* ── 互动问答 ── */
+  .quiz-container {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: var(--radius);
+    padding: 40px 32px;
+    max-width: 680px; margin: 0 auto;
+    text-align: center;
+  }
+  .quiz-container .question {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.2rem; color: var(--text);
+    margin-bottom: 28px; letter-spacing: 1px;
+  }
+  .quiz-container .options {
+    display: grid; gap: 12px; margin-bottom: 24px;
+  }
+  .quiz-container .option {
+    padding: 14px 20px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    cursor: pointer; transition: var(--transition);
+    font-size: 0.95rem; color: var(--text-dim);
+    text-align: left;
+  }
+  .quiz-container .option:hover {
+    border-color: var(--gold);
+    background: rgba(200,164,92,0.06);
+    color: var(--text);
+  }
+  .quiz-container .option.correct {
+    border-color: #27ae60 !important;
+    background: rgba(39,174,96,0.12) !important;
+    color: #2ecc71 !important;
+  }
+  .quiz-container .option.wrong {
+    border-color: var(--danger) !important;
+    background: rgba(192,57,43,0.1) !important;
+    color: #e74c3c !important;
+  }
+  .quiz-container .feedback {
+    font-size: 0.9rem; min-height: 24px;
+    margin-bottom: 20px; letter-spacing: 1px;
+  }
+  .btn-sm {
+    padding: 10px 28px; border-radius: 50px;
+    font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; border: none; font-family: inherit;
+    background: var(--gold); color: #111;
+    transition: var(--transition);
+  }
+  .btn-sm:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* ── 摄影小贴士 ── */
+  .tips-carousel {
+    display: flex; gap: 20px; overflow-x: auto;
+    padding: 12px 0; scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tips-carousel::-webkit-scrollbar { display: none; }
+  .tip-card {
+    min-width: 280px; flex-shrink: 0;
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    scroll-snap-align: start;
+    transition: var(--transition);
+  }
+  .tip-card:hover { border-color: rgba(200,164,92,0.2); transform: translateY(-2px); }
+  .tip-card .tip-num {
+    font-size: 2.5rem; font-weight: 900;
+    color: rgba(200,164,92,0.1); line-height: 1;
+  }
+  .tip-card h4 { color: var(--gold); margin: 8px 0; font-size: 0.95rem; }
+  .tip-card p { color: var(--text-dim); font-size: 0.82rem; line-height: 1.7; }
+
+  /* ── 页脚 ── */
+  footer {
+    position: relative; z-index: 1;
+    text-align: center; padding: 48px 20px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    color: var(--text-dim); font-size: 0.82rem;
+  }
+  footer span { color: var(--gold); }
+
+  /* ── 响应式 ── */
+  @media (max-width: 640px) {
+    nav .links { gap: 16px; }
+    section { padding: 60px 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero .aperture { animation: none; }
+    .hero .aperture::after { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<nav>
+  <span class="logo">YUAN</span>
+  <div class="links">
+    <a href="#exposure">曝光</a>
+    <a href="#composition">构图</a>
+    <a href="#quiz">挑战</a>
+    <a href="#tips">贴士</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="aperture">
+    <div class="blade"></div><div class="blade"></div><div class="blade"></div><div class="blade"></div>
+    <div class="blade"></div><div class="blade"></div><div class="blade"></div><div class="blade"></div>
+  </div>
+  <h1>摄影大师小袁</h1>
+  <p class="subtitle">光圈 · 快门 · 光影之间，捕捉世界的温度</p>
+  <div class="cta">
+    <a href="#exposure" class="btn btn-primary">开始探索</a>
+    <a href="#quiz" class="btn btn-ghost">知识挑战</a>
+  </div>
+</section>
+
+<!-- 曝光三角 -->
+<section id="exposure">
+  <div class="section-title">
+    <h2>曝光三角</h2>
+    <p>摄影的根基 —— 光圈、快门、ISO 的平衡艺术</p>
+  </div>
+  <div class="triangle-grid">
+    <div class="card" onclick="this.classList.toggle('expanded')">
+      <span class="icon">🔵</span>
+      <h3>光圈 (Aperture)</h3>
+      <p>控制进光量和景深。f/1.4 大光圈虚化背景，f/16 小光圈全景清晰。</p>
+      <div class="detail"><div class="detail-inner">数值越小光圈越大，进光越多。f/1.4 → f/2 → f/2.8 → f/4 → f/5.6 → f/8 → f/11 → f/16，每档差一倍进光量。大光圈适合人像虚化，小光圈适合风光全清晰。</div></div>
+    </div>
+    <div class="card" onclick="this.classList.toggle('expanded')">
+      <span class="icon">⏱️</span>
+      <h3>快门速度 (Shutter)</h3>
+      <p>决定曝光时长。1/1000s 冻结瞬间，1/15s 制造动感模糊。</p>
+      <div class="detail"><div class="detail-inner">安全快门 ≈ 1/焦距。手持200mm镜头至少用 1/200s。慢门拍流水丝绸效果用 1/4s~2s，体育抓拍用 1/1000s+。B门可手动控制超长曝光。</div></div>
+    </div>
+    <div class="card" onclick="this.classList.toggle('expanded')">
+      <span class="icon">📊</span>
+      <h3>感光度 (ISO)</h3>
+      <p>传感器对光的敏感度。ISO 100 画质最佳，ISO 6400 噪点增多。</p>
+      <div class="detail"><div class="detail-inner">晴天户外 ISO 100-200，阴天/室内 ISO 400-800，夜景 ISO 1600-6400。原则：能用低 ISO 就尽量低，保证快门速度的前提下。现代相机 ISO 3200 也完全可用。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 构图法则 -->
+<section id="composition">
+  <div class="section-title">
+    <h2>构图法则</h2>
+    <p>让照片从「拍到了」变成「拍的好」</p>
+  </div>
+  <div class="rules-grid">
+    <div class="rule-item">
+      <span class="rule-icon">⊞</span>
+      <h4>三分法</h4>
+      <p>画面横竖各分三等份，把主体放在交叉点上，最符合视觉习惯。</p>
+    </div>
+    <div class="rule-item">
+      <span class="rule-icon">↗</span>
+      <h4>引导线</h4>
+      <p>利用道路、栏杆、河流等线条引导观众视线走向主体。</p>
+    </div>
+    <div class="rule-item">
+      <span class="rule-icon">▣</span>
+      <h4>框架构图</h4>
+      <p>用门窗、拱门、树枝做「画框」，让画面更有层次和纵深感。</p>
+    </div>
+    <div class="rule-item">
+      <span class="rule-icon">◎</span>
+      <h4>对称</h4>
+      <p>建筑摄影的利器。完美的左右对称带来庄重、稳定的视觉冲击。</p>
+    </div>
+    <div class="rule-item">
+      <span class="rule-icon">◌</span>
+      <h4>留白</h4>
+      <p>极简风格的核心。大面积负空间让主体突出，给观者想象余地。</p>
+    </div>
+    <div class="rule-item">
+      <span class="rule-icon">☰</span>
+      <h4>前景层次</h4>
+      <p>加入前景元素增加纵深。花草、石头、人物剪影都是好选择。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 互动问答 -->
+<section id="quiz">
+  <div class="section-title">
+    <h2>知识挑战</h2>
+    <p>测测你的摄影基本功</p>
+  </div>
+  <div class="quiz-container">
+    <div class="question" id="quiz-question"></div>
+    <div class="options" id="quiz-options"></div>
+    <div class="feedback" id="quiz-feedback"></div>
+    <button class="btn-sm" onclick="nextQuestion()" id="quiz-next" style="display:none">下一题 →</button>
+  </div>
+</section>
+
+<!-- 摄影小贴士 -->
+<section id="tips">
+  <div class="section-title">
+    <h2>小袁的摄影笔记</h2>
+    <p>实战中积累的 6 条心得</p>
+  </div>
+  <div class="tips-carousel">
+    <div class="tip-card"><div class="tip-num">01</div><h4>黄金时刻</h4><p>日出后和日落前的一小时，光线最柔和温暖，是出片率最高的时段。记得提前踩点。</p></div>
+    <div class="tip-card"><div class="tip-num">02</div><h4>RAW 格式</h4><p>永远用 RAW 拍摄。它保留了全部传感器数据，后期调整白平衡和曝光时比 JPEG 强太多。</p></div>
+    <div class="tip-card"><div class="tip-num">03</div><h4>对焦再构图</h4><p>先半按快门锁定对焦和曝光，再移动相机重新构图。这是街头抓拍的必备肌肉记忆。</p></div>
+    <div class="tip-card"><div class="tip-num">04</div><h4>欠曝优于过曝</h4><p>数码相机暗部可拉回，高光过曝细节永远丢失。宁欠勿曝，后期再提亮阴影。</p></div>
+    <div class="tip-card"><div class="tip-num">05</div><h4>靠近一点</h4><p>罗伯特·卡帕说过「拍得不够好是因为离得不够近」。别怕往前走两步，画面冲击力翻倍。</p></div>
+    <div class="tip-card"><div class="tip-num">06</div><h4>三脚架不是累赘</h4><p>风光摄影的命根子。哪怕是最便宜的脚架，也能让你在弱光下拍出手机永远追不上的画质。</p></div>
+  </div>
+</section>
+
+<footer>
+  <p>用光影书写故事 · <span>摄影大师小袁</span> © 2026</p>
+</footer>
+
+<script>
+  // ── 粒子背景 ──
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.document.documentElement.scrollHeight;
+  }
+  resize();
+  window.addEventListener('resize', () => { resize(); initParticles(); });
+
+  function initParticles() {
+    const count = Math.floor(W * H / 8000);
+    particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 1.5 + 0.3,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        alpha: Math.random() * 0.5 + 0.1
+      });
+    }
+  }
+  initParticles();
+
+  function drawParticles() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = W;
+      if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H;
+      if (p.y > H) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,164,92,${p.alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(drawParticles);
+  }
+  drawParticles();
+
+  // 滚动时更新画布高度
+  let resizeTimeout;
+  window.addEventListener('scroll', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      const newH = document.documentElement.scrollHeight;
+      if (newH !== H) { H = canvas.height = newH; initParticles(); }
+    }, 200);
+  });
+
+  // ── 摄影问答 ──
+  const quizData = [
+    {
+      q: '以下哪个光圈值进光量最大？',
+      opts: ['f/16', 'f/8', 'f/2.8', 'f/22'],
+      ans: 2,
+      explain: '光圈数值越小，光圈开口越大，进光越多。f/2.8 是四个选项中最大的光圈。'
+    },
+    {
+      q: '拍摄流水「丝绸效果」应该用什么快门速度？',
+      opts: ['1/1000s', '1/250s', '1/2s', '1/60s'],
+      ans: 2,
+      explain: '慢速快门（1/2秒或更慢）让水流在曝光期间移动，产生柔滑的丝绸效果。需要三脚架！'
+    },
+    {
+      q: '「安全快门」的经验法则是？',
+      opts: ['1/焦距', '1/ISO', '1/光圈', '1/曝光补偿'],
+      ans: 0,
+      explain: '手持拍摄时，快门速度应 ≥ 1/焦距。比如用 200mm 镜头，快门至少 1/200s 才不易糊。'
+    },
+    {
+      q: '阴天拍摄，ISO 应该设多少？',
+      opts: ['ISO 100', 'ISO 400-800', 'ISO 12800', 'ISO 50'],
+      ans: 1,
+      explain: '阴天光线较弱，ISO 400-800 可以在保证画质的同时获得足够快的快门速度。'
+    },
+    {
+      q: '「三分法构图」中，主体应该放在哪里？',
+      opts: ['画面正中央', '画面上方', '井字交叉点上', '画面最下方'],
+      ans: 2,
+      explain: '将画面用两横两竖分成九宫格，主体放在线条交叉点（共4个），最符合人眼视觉习惯。'
+    }
+  ];
+
+  let currentQ = 0, answered = false, score = 0;
+
+  function loadQuestion() {
+    if (currentQ >= quizData.length) {
+      document.getElementById('quiz-question').textContent = `🎉 挑战完成！你的得分：${score} / ${quizData.length}`;
+      document.getElementById('quiz-options').innerHTML = '';
+      document.getElementById('quiz-feedback').textContent = score === quizData.length ? '满分！你是真正的摄影大师！' : score >= 3 ? '不错！继续加油学习~' : '多看看上面的知识卡片再来挑战吧！';
+      document.getElementById('quiz-next').style.display = 'none';
+      return;
+    }
+    const item = quizData[currentQ];
+    document.getElementById('quiz-question').textContent = `Q${currentQ + 1}. ${item.q}`;
+    document.getElementById('quiz-options').innerHTML = item.opts.map((o, i) =>
+      `<div class="option" onclick="answer(${i})">${o}</div>`
+    ).join('');
+    document.getElementById('quiz-feedback').textContent = '';
+    document.getElementById('quiz-next').style.display = 'none';
+    answered = false;
+  }
+
+  function answer(idx) {
+    if (answered) return;
+    answered = true;
+    const item = quizData[currentQ];
+    const opts = document.querySelectorAll('.option');
+    opts[item.ans].classList.add('correct');
+    if (idx === item.ans) {
+      score++;
+      document.getElementById('quiz-feedback').innerHTML = '<span style="color:#2ecc71">✓ 正确！</span> ' + item.explain;
+    } else {
+      opts[idx].classList.add('wrong');
+      document.getElementById('quiz-feedback').innerHTML = '<span style="color:#e74c3c">✗ 不对哦。</span> ' + item.explain;
+    }
+    document.getElementById('quiz-next').style.display = 'inline-block';
+  }
+
+  function nextQuestion() {
+    currentQ++;
+    loadQuestion();
+  }
+  loadQuestion();
+
+  // ── 平滑滚动偏移 ──
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
